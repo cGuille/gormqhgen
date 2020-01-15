@@ -4,21 +4,32 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/base64"
-	"flag"
 	"fmt"
 	"os"
 )
 
 func main() {
-	flag.Parse()
-	var args = flag.Args()
-
-	if len(args) != 1 {
-		fmt.Fprintf(os.Stderr, "Expected exactly one argument (args: %v)\n", args)
+	if len(os.Args) < 2 {
+		fmt.Println("Expected either 'generate' or 'validate' subcommand")
 		os.Exit(1)
 	}
 
-	fmt.Println(generate(args[0]))
+	var subcommandName = os.Args[1]
+	var subcommandArgs = os.Args[2:]
+
+	switch subcommandName {
+	case "generate":
+		if len(subcommandArgs) != 1 {
+			fmt.Fprintf(os.Stderr, "Expected exactly one argument (args: %v)\n", subcommandArgs)
+			os.Exit(1)
+		}
+		fmt.Println(generate(subcommandArgs[0]))
+	case "validate":
+		fmt.Println("TODO")
+	default:
+		fmt.Println("Expected either 'generate' or 'validate' subcommand")
+		os.Exit(1)
+	}
 }
 
 func generate(password string) string {
